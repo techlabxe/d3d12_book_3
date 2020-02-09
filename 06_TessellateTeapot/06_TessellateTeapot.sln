@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_TessellateTeapot", "06_TessellateTeapot.vcxproj", "{00C0D36F-2533-4B56-86DF-43AFA2368E43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00C0D36F-2533-4B56-86DF-43AFA2368E43}.Debug|x64.ActiveCfg = Debug|x64
+		{00C0D36F-2533-4B56-86DF-43AFA2368E43}.Debug|x64.Build.0 = Debug|x64
+		{00C0D36F-2533-4B56-86DF-43AFA2368E43}.Release|x64.ActiveCfg = Release|x64
+		{00C0D36F-2533-4B56-86DF-43AFA2368E43}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D83AB2C-54F8-4CC7-8220-849E38FEB1AB}
+	EndGlobalSection
+EndGlobal
