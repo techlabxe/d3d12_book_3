@@ -1,12 +1,12 @@
 #include "CubemapRenderingApp.h"
 #include "TeapotModel.h"
-#include "loader/PMDloader.h"
 
 #include "imgui.h"
 #include "examples/imgui_impl_dx12.h"
 #include "examples/imgui_impl_win32.h"
 
 #include <DirectXTex.h>
+#include <array>
 #include <fstream>
 
 using namespace std;
@@ -594,6 +594,7 @@ void CubemapRenderingApp::RenderToCubemapSinglePass()
   m_commandList->IASetVertexBuffers(0, 1, &m_model.vbView);
   m_commandList->IASetIndexBuffer(&m_model.ibView);
   m_commandList->SetGraphicsRootConstantBufferView(0, cb->GetGPUVirtualAddress());
+  m_commandList->SetGraphicsRootConstantBufferView(1, m_teapotInstanceParameters.Get()->GetGPUVirtualAddress());
   m_commandList->DrawIndexedInstanced(m_model.indexCount, InstanceCount, 0, 0, 0);
 }
 
@@ -774,8 +775,11 @@ void CubemapRenderingApp::SetInfoQueueFilter()
   filter.DenyList.NumSeverities = _countof(severities);
   filter.DenyList.pSeverityList = severities;
 
-  infoQueue->PushStorageFilter(&filter);
-  infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
+  if (infoQueue != nullptr)
+  {
+      infoQueue->PushStorageFilter(&filter);
+      infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
+  }
 }
 
 
