@@ -19,7 +19,8 @@ CubemapRenderingApp::CubemapRenderingApp()
     XMFLOAT3(0.0f, 0.0f, 0.0f)
   );
   m_mode = Mode_StaticCubemap;
-  m_lightDirection = XMVector3Normalize(XMLoadFloat3(&XMFLOAT3(1.0f, 1.0f, 1.0f)));
+  const auto dir = XMFLOAT3(1.0f, 1.0f, 1.0f);
+  m_lightDirection = XMVector3Normalize(XMLoadFloat3(&dir));
 }
 
 void CubemapRenderingApp::Prepare()
@@ -204,8 +205,9 @@ void CubemapRenderingApp::PrepareRenderCubemap()
     DXGI_FORMAT_R8G8B8A8_UNORM,
     CubeMapEdge, CubeMapEdge, 6, 1, 1, 0,
     D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+  const auto heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
   HRESULT hr = m_device->CreateCommittedResource(
-    &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+    &heapProps,
     D3D12_HEAP_FLAG_NONE,
     &desc,
     D3D12_RESOURCE_STATE_RENDER_TARGET,
@@ -252,8 +254,9 @@ void CubemapRenderingApp::PrepareRenderCubemap()
   CD3DX12_CLEAR_VALUE clearDepthValue{};
   clearDepthValue.Format = cubeDepthDesc.Format;
   clearDepthValue.DepthStencil.Depth = 1.0f;
+  
   hr = m_device->CreateCommittedResource(
-    &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+    &heapProps,
     D3D12_HEAP_FLAG_NONE,
     &cubeDepthDesc,
     D3D12_RESOURCE_STATE_DEPTH_WRITE,
@@ -612,8 +615,9 @@ void CubemapRenderingApp::RenderToMain()
     dsv, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
   // 描画先をセット
-  m_commandList->OMSetRenderTargets(1, &(D3D12_CPU_DESCRIPTOR_HANDLE)rtv,
-    FALSE, &(D3D12_CPU_DESCRIPTOR_HANDLE)dsv);
+  D3D12_CPU_DESCRIPTOR_HANDLE handleRtvs[] = { rtv };
+  D3D12_CPU_DESCRIPTOR_HANDLE handleDsv = dsv;
+  m_commandList->OMSetRenderTargets(1, handleRtvs, FALSE, &handleDsv);
 
   // ビューポートとシザーのセット
   auto viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, float(m_width), float(m_height));

@@ -178,8 +178,9 @@ void ComputeFilterApp::RenderToMain()
     dsv, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
   // 描画先をセット
-  m_commandList->OMSetRenderTargets(1, &(D3D12_CPU_DESCRIPTOR_HANDLE)rtv,
-    FALSE, &(D3D12_CPU_DESCRIPTOR_HANDLE)dsv);
+  D3D12_CPU_DESCRIPTOR_HANDLE handleRtvs[] = { rtv };
+  D3D12_CPU_DESCRIPTOR_HANDLE handleDsv = dsv;
+  m_commandList->OMSetRenderTargets(1, handleRtvs, FALSE, &handleDsv);
 
   // ビューポートとシザーのセット
   auto viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, float(m_width), float(m_height));
@@ -273,8 +274,9 @@ void ComputeFilterApp::PrepareComputeFilter()
   auto texDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height);
   texDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
+  const auto heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
   HRESULT hr = m_device->CreateCommittedResource(
-    &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+    &heapProps,
     D3D12_HEAP_FLAG_NONE,
     &texDesc,
     D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
